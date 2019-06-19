@@ -31,6 +31,23 @@ class _HomeState extends State<Home> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
+  static final List<String> _items = <String>[
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N'
+  ];
+
   Future<void> _handleRefresh() {
     final Completer<void> completer = Completer<void>();
     Timer(const Duration(seconds: 3), () {
@@ -42,7 +59,7 @@ class _HomeState extends State<Home> {
           action: SnackBarAction(
               label: 'RETRY',
               onPressed: () {
-                _refreshIndicatorKey.currentState.show();
+                _refreshIndicatorKey.currentState?.show();
               })));
     });
   }
@@ -50,16 +67,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Stack(
           children: <Widget>[
             Align(alignment: Alignment(-1.0, 0.0), child: Icon(Icons.reorder)),
-            Align(alignment: Alignment(-0.3, 0.0), child: Text(widget.title)),
+            Align(alignment: Alignment(-0.75, 0.0), child: Text(widget.title)),
           ],
         ),
       ),
       body: EzList(
+        key: _refreshIndicatorKey,
         onRefresh: _handleRefresh,
+        items: _items,
+        itemBuilder: (BuildContext context, int index) {
+          final String item = _items[index];
+          return ListTile(
+            isThreeLine: true,
+            leading: CircleAvatar(child: Text(item)),
+            title: Text('This item represents $item.'),
+            subtitle: const Text(
+                'Even more additional list item information appears on line three.'),
+          );
+        },
       ),
     );
   }
